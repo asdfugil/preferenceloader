@@ -1,7 +1,7 @@
 # DON'T USE THIS MAKEFILE! IT IS NOT INTENDED FOR UPSTREAM THEOS
 
 TARGET := iphone:clang:14.5:14.0
-ARCHS = arm64e
+ARCHS = arm64 arm64e
 
 export THEOS_USE_NEW_ABI=1
 
@@ -50,6 +50,8 @@ after-stage::
 	@find $(THEOS_STAGING_DIR) -iname '*.plist' -exec plutil -convert binary1 {} \;
 #   $(FAKEROOT) chown -R root:admin $(THEOS_STAGING_DIR)
 	@mkdir -p $(THEOS_STAGING_DIR)/$(INSTALL_PREFIX)/Library/PreferenceBundles $(THEOS_STAGING_DIR)/$(INSTALL_PREFIX)/Library/PreferenceLoader/Preferences
+	@mkdir -p $(THEOS_STAGING_DIR)/$(INSTALL_PREFIX)/usr/share/preferenceloader
+	@zstd -c19 LICENSE > $(THEOS_STAGING_DIR)/$(INSTALL_PREFIX)/usr/share/preferenceloader/LICENSE.zst
 # 	sudo chown -R root:admin $(THEOS_STAGING_DIR)/Library $(THEOS_STAGING_DIR)/usr
 
 after-install::

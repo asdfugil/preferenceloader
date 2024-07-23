@@ -11,6 +11,8 @@
 #define DEBUG_TAG "libprefs"
 #import "debug.h"
 
+#define ROOTLESS 0
+
 /* {{{ Imports (Preferences.framework) */
 extern "C" NSArray* SpecifiersFromPlist(NSDictionary* plist,
 					PSSpecifier* prevSpec,
@@ -391,10 +393,10 @@ static void pl_lazyLoadBundleCore(id self, SEL _cmd, PSSpecifier *specifier, voi
 	#if SIMULATOR
 	NSRange sysRange = [path rangeOfString:@"/opt/simject/PreferenceBundles" options:0];
 	#else
-	NSRange sysRange = [path rangeOfString:@"/var/jb/System/Library/PreferenceBundles" options:0];
+	NSRange sysRange = [path rangeOfString:@"/System/Library/PreferenceBundles" options:0];
 	#endif
 	if(sysRange.location != NSNotFound) {
-		newPath = [path stringByReplacingCharactersInRange:sysRange withString:@"/var/jb/Library/PreferenceBundles"];
+		newPath = [path stringByReplacingCharactersInRange:sysRange withString:@"/Library/PreferenceBundles"];
 	}
 	if(newPath && [[NSFileManager defaultManager] fileExistsAtPath:newPath]) {
 		path = newPath;
@@ -422,7 +424,7 @@ static void pl_lazyLoadBundleCore(id self, SEL _cmd, PSSpecifier *specifier, voi
 			#if SIMULATOR
 			bundlePath = [NSString stringWithFormat:@"/opt/simject/PreferenceBundles/%@.bundle", bundleName];
 			#else
-			bundlePath = [NSString stringWithFormat:@"/var/jb/Library/PreferenceBundles/%@.bundle", bundleName];
+			bundlePath = [NSString stringWithFormat:@"/Library/PreferenceBundles/%@.bundle", bundleName];
 			#endif
 
 		// Third Try (/Library failed)
@@ -431,7 +433,7 @@ static void pl_lazyLoadBundleCore(id self, SEL _cmd, PSSpecifier *specifier, voi
 			#if SIMULATOR
 			bundlePath = [NSString stringWithFormat:@"/opt/simject/PreferenceBundles/%@.bundle", bundleName];
 			#else
-			bundlePath = [NSString stringWithFormat:@"/var/jb/System/Library/PreferenceBundles/%@.bundle", bundleName];
+			bundlePath = [NSString stringWithFormat:@"/System/Library/PreferenceBundles/%@.bundle", bundleName];
 			#endif
 
 		// Really? (/System/Library failed...)
